@@ -1,2 +1,4 @@
 # RefNet-QG
-RefNet for Question Generation
+This repository contains the code for RefNet
+
+Code will be uploaded soon.
