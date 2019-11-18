@@ -743,11 +743,6 @@ class run_model:
                 self.doubly_stocastic_loss = float(self.config["Aux_Loss"]["double_stocastic_attention_lambda"]) * temp_attention_weights
                 total_loss += self.doubly_stocastic_loss
 
-            if self.config["Aux_Loss"]["use_loss_question_label"] == "True":   
-                y = tf.one_hot(tf.reshape(self.question_label_placeholder, (-1,1)), 9)
-                self.loss_question_label = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.question_logits, labels = y))
-                total_loss += float(self.config["Aux_Loss"]["question_label_lambda"]) * self.loss_question_label 
- 
             self.output_switch = final_outputs["output_switch"]
 
             if not self.config["Decoder"].get("no_prop_copy") == "True":   
@@ -764,9 +759,6 @@ class run_model:
                 print (temp_attention_weights_prop)
                 self.prop_indices_memnet_loss = loss_op(temp_attention_weights_prop, self.prop_indices_placeholder, self.weights_placeholder, is_copy=(self.config["Decoder"]["decoder_type"] == "copy"), batch_size = int(self.config["Hyperparams"]["batch_size"]))
                 total_loss += float(self.config["Aux_Loss"]["prop_indices_lambda"]) * self.prop_indices_memnet_loss
-
-            if self.config["Question_encoder"]["use_gate_policy"] == "True" and self.config["Question_encoder"]["use_rl_on_gate"] == "True":
-               total_loss += float(self.config["Question_encoder"]["gate_loss_lambda"]) * self.question_gate_loss
 
             if self.config["Hyperparams"]["use_only_rl"] == "True" or self.config["Hyperparams"]["rl_plus_crossent"] == "True":
                 self.loss_reinforce_op = reinforce_loss(self.config,self.logits_rein, self.predictions_reinforce,self.bleu_sample, self.bleu_greedy, self.weights_placeholder, 
@@ -832,22 +824,17 @@ class run_model:
             if (os.path.exists(os.path.join(self.config["Log"]["output_dir"] , "best_model.meta"))):
                 print ("Initializing the model with the best saved model")
                 optimistic_restore(sess, os.path.join(self.config["Log"]["output_dir"] , "best_model"))
-                best_test_bleu, best_test_bleu_prev = self.print_titles_in_files(sess, self.dataset.datasets["test"])
+                best_test_bleu, best_test_bleu_prev = self.print_titles_in_files(sess, self.dataset.datasets["valid"])
 
                 saver.save(sess, os.path.join(self.config["Log"]["output_dir"], "saved_params"))
                 #self.print_titles_in_files_beamsearch(sess, self.dataset.datasets["test"], self.dataset.vocab, 101)
-                print ("wrote the file")
-                # best_val_loss = self.do_eval(sess, self.dataset.datasets["valid"])
-                # test_loss    = self.do_eval(sess, self.dataset.datasets["test"])
-                # print ("Validation Loss:{}".format(best_val_loss))
-                # print ("Test Loss:{}".format(test_loss)) 
                 if (sys.argv[3] == "plots"):
 		        	return 
                  
             else:
                 best_val_loss = float('inf')
                 best_test_bleu = 0.0
-                best_test_bleu, best_test_bleu_prev = self.print_titles_in_files(sess, self.dataset.datasets["test"])
+                best_test_bleu, best_test_bleu_prev = self.print_titles_in_files(sess, self.dataset.datasets["valid"])
             
             if (os.path.exists(os.path.join(self.config["Log"]["output_dir"],  "best_model.meta"))):
                 print ("Initializing the model with the last saved epoch")
@@ -881,16 +868,16 @@ class run_model:
                 #if (epoch == self.config.max_epochs - 1):
                 saver.save(sess, os.path.join(self.config["Log"]["output_dir"] , 'last_model'))
 
-                test_bleu, test_bleu_prev = self.print_titles_in_files(sess, self.dataset.datasets["test"], epoch)
+                valid_bleu, valid_bleu_prev = self.print_titles_in_files(sess, self.dataset.datasets["valid"], epoch)
                                 
-                if test_bleu >= best_test_bleu:
-                    best_test_bleu = test_bleu
+                if valid_bleu >= best_test_bleu:
+                    best_test_bleu = valid_bleu
                     best_test_epoch = epoch
                     print ("Saving best_model at epoch",epoch)
                     saver.save(sess, os.path.join(self.config["Log"]["output_dir"] , 'best_model'))
 
-                if test_bleu_prev >= best_test_bleu_prev:
-                    best_test_bleu_prev = test_bleu_prev
+                if valid_bleu_prev >= best_test_bleu_prev:
+                    best_test_bleu_prev = valid_bleu_prev
                     print ("Saving best_model_prev at epoch",epoch)
                     saver.save(sess, os.path.join(self.config["Log"]["output_dir"] , 'best_model_prev'))
                 
