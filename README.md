@@ -31,7 +31,7 @@
 
 ## Pretrained Embeddings
     Download the pretrained embeddings for a given language and then store it to a folder squad_embeddings/
-    * English Embedding: bash data_extraction_scripts/extract_embeddings.sh english pretrained_embeddings/
+    * English Embedding: bash extract_embeddings.sh english embeddings/
     
     
 ## Proposed Model: Training
