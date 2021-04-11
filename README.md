@@ -42,7 +42,7 @@
  ## Proposed Models: Inference
     
     * The syntax for running the inference is also similar to running the training 
-      python run_model_inference.py ../data/ config_file.ini
+      python run_model_inference.py ../data/ config_files/config_file_sentence.ini
    
  
  
