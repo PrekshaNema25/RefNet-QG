@@ -36,7 +36,7 @@
     
 ## Proposed Model: Training
     * To run only the RefNet-QG model on SQuAD model:
-      python run_model_training.py ../data/ config_files/config_file.ini
+      python run_model_training.py ../data/ config_files/config_file_sentence.ini
 
     
  ## Proposed Models: Inference
