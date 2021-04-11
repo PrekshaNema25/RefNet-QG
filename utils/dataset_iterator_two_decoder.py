@@ -273,16 +273,16 @@ class PadDataset:
         position_embeddings, _, _ = self.make_batch(dt.position_embeddings,batch_size,count,max_length_content,pad_value=max_length_content)
         position_embeddings = np.asarray(position_embeddings)
 
-        #embeddings = []
+        embeddings = []
 
-        #for i in range(dim//2):
-        #    sin_embed = np.sin(position_embeddings/(5.0)**(2.0*i/dim))
-        #    cos_embed = np.cos(position_embeddings/(5.0)**(2.0*i/dim))
-        #    embeddings.extend([sin_embed,cos_embed])
+        for i in range(dim//2):
+            sin_embed = np.sin(position_embeddings/(5.0)**(2.0*i/dim))
+            cos_embed = np.cos(position_embeddings/(5.0)**(2.0*i/dim))
+            embeddings.extend([sin_embed,cos_embed])
 
-        #position_embeddings = np.concatenate(embeddings,axis=-1)
+        position_embeddings = np.stack(embeddings,axis=-1)
 
-        return np.reshape(position_embeddings, [-1,max_length_content])
+        return position_embeddings
 
     def next_batch(self, dt, batch_size, c=True):
         
