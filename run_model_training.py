@@ -128,7 +128,7 @@ class run_model:
         self.encode_adj_matrix = tf.placeholder(tf.float32, shape=(None, int(self.config["Encoder"]["max_sequence_length"]),int(self.config["Encoder"]["max_sequence_length"])), name= "passage_dep_tree"+name)
         self.query_adj_matrix = tf.placeholder(tf.float32, shape=(None, int(self.config["Query"]["max_sequence_length"]), int(self.config["Query"]["max_sequence_length"])), name="query_dep_tree"+name)
         self.query_position_placeholder = tf.placeholder(tf.int32, shape=(None, int(self.config["Query"]["max_sequence_length"])), name="query_position"+name)
-        self.encoder_positional_embedding = tf.placeholder(tf.int32, shape=(None, int(self.config["Encoder"]["max_sequence_length"])), name="encoder_positional"+name)
+        self.encoder_positional_embedding = tf.placeholder(tf.float32, shape=(None, int(self.config["Encoder"]["max_sequence_length"]), int(self.config["Embedding"]["position_embeddings_dims"])), name="encoder_positional"+name)
         #self.decode_input_pos_placeholder = tf.placeholder(tf.int32, shape=(None, int(self.config["Decoder"]["max_sequence_length"])-1), name="pos_title"+name)
         #self.label_pos_placeholder = tf.placeholder(tf.int32, shape=(None, int(self.config["Decoder"]["max_sequence_length"])-1), name="pos_label"+name)
         self.prev_decoder_label_placeholder = tf.placeholder(tf.int32, shape=(None, int(self.config["Decoder"]["max_prop_steps"])-1), name="prop_decoder_labels"+name)
