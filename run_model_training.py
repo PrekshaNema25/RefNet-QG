@@ -812,7 +812,7 @@ class run_model:
 
             tb_path = os.path.join(self.config["Log"]["output_dir"] ,  "tensorboard")
             if not (os.path.exists(tb_path)):
-                os.mkdir(tb_path)
+                os.makedirs(tb_path)
             writer = tf.summary.FileWriter(tb_path ,sess.graph)
 
             # Instantiate a SummaryWriter to output summaries and the Graph.
