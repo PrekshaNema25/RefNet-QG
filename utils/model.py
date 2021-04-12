@@ -315,8 +315,7 @@ class BasicSeq2SeqWithAttentionwithQuery:
 
         if self.args["Embedding"]["use_positional_embeddings"] == 'True':
           print ("PASSAGE ENCODER", encoder_input_batch["positional"].get_shape())
-          positional_embeds = tf.nn.embedding_lookup(self.positional_embedding_layer, encoder_input_batch["positional"]) 
-          concat_word_char_embed = tf.concat([concat_word_char_embed, positional_embeds],axis=-1)
+          concat_word_char_embed = tf.concat([concat_word_char_embed,  encoder_input_batch["positional"]],axis=-1)
 
         if "only_gcn" in self.args["Encoder"] and self.args["Encoder"]["only_gcn"] == "True":
            encoder_outputs = concat_word_char_embed
